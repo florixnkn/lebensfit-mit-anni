@@ -91,6 +91,7 @@ async function loadCoursesAdmin() {
           <small>${c.studios ? escapeHtml(c.studios.name) : "Kein Studio"}${c.note ? " · " + escapeHtml(c.note) : ""}${c.active ? "" : " · PAUSIERT"}</small>
         </div>
         <div class="admin-actions">
+          <button class="btn btn-ghost btn-small" data-toggle-course="${c.id}">${c.active ? "Pausieren" : "Aktivieren"}</button>
           <button class="btn btn-ghost btn-small" data-edit-course="${c.id}">Bearbeiten</button>
           <button class="btn btn-danger btn-small" data-del-course="${c.id}">Löschen</button>
         </div>
@@ -101,6 +102,28 @@ async function loadCoursesAdmin() {
 
     list.querySelectorAll("[data-edit-course]").forEach((b) =>
       b.addEventListener("click", () => fillCourseForm(courses.find((c) => c.id === b.dataset.editCourse)))
+    );
+    list.querySelectorAll("[data-toggle-course]").forEach((b) =>
+      b.addEventListener("click", async () => {
+        const c = courses.find((x) => x.id === b.dataset.toggleCourse);
+        try {
+          await sbAdminRpc("admin_save_course", {
+            p_password: getPw(),
+            p_id: c.id,
+            p_title: c.title,
+            p_weekday: c.weekday,
+            p_start_time: c.start_time,
+            p_duration: c.duration_minutes,
+            p_studio_id: c.studio_id,
+            p_note: c.note,
+            p_active: !c.active,
+          });
+          showMsg(dashMsg, c.active ? "Termin pausiert (auf der Website versteckt)." : "Termin aktiviert.", true);
+          loadCoursesAdmin();
+        } catch (err) {
+          showMsg(dashMsg, err.message, false);
+        }
+      })
     );
     list.querySelectorAll("[data-del-course]").forEach((b) =>
       b.addEventListener("click", async () => {
@@ -180,6 +203,7 @@ async function loadReviewsAdmin() {
           <small>${escapeHtml(r.text)}</small>
         </div>
         <div class="admin-actions">
+          <button class="btn btn-ghost btn-small" data-toggle-review="${r.id}">${r.published ? "Verstecken" : "Veröffentlichen"}</button>
           <button class="btn btn-ghost btn-small" data-edit-review="${r.id}">Bearbeiten</button>
           <button class="btn btn-danger btn-small" data-del-review="${r.id}">Löschen</button>
         </div>
@@ -190,6 +214,25 @@ async function loadReviewsAdmin() {
 
     list.querySelectorAll("[data-edit-review]").forEach((b) =>
       b.addEventListener("click", () => fillReviewForm(reviews.find((r) => r.id === b.dataset.editReview)))
+    );
+    list.querySelectorAll("[data-toggle-review]").forEach((b) =>
+      b.addEventListener("click", async () => {
+        const r = reviews.find((x) => x.id === b.dataset.toggleReview);
+        try {
+          await sbAdminRpc("admin_save_review", {
+            p_password: getPw(),
+            p_id: r.id,
+            p_author: r.author,
+            p_rating: r.rating,
+            p_text: r.text,
+            p_published: !r.published,
+          });
+          showMsg(dashMsg, r.published ? "Bewertung versteckt." : "Bewertung veröffentlicht.", true);
+          loadReviewsAdmin();
+        } catch (err) {
+          showMsg(dashMsg, err.message, false);
+        }
+      })
     );
     list.querySelectorAll("[data-del-review]").forEach((b) =>
       b.addEventListener("click", async () => {
