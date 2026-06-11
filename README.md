@@ -26,11 +26,8 @@ Website der selbstständigen Cycling-Trainerin **Antje Kindler** aus Neufahrn b.
 2. Den Inhalt von [`supabase/setup.sql`](supabase/setup.sql) einfügen und ausführen.
 3. `https://…/admin/` öffnen, mit dem Startpasswort `lebensfit-start` anmelden
    und **sofort unter „🔑 Passwort" ein eigenes Passwort setzen**.
-4. Im Tab „📅 Termine" die echten Kurszeiten eintragen (die mitgelieferten Zeiten sind Platzhalter).
 
 ## Offene Punkte vor Go-Live
 
-- [ ] E-Mail-Adresse und Telefonnummer in `impressum.html` und `datenschutz.html` eintragen (Pflichtangaben!)
 - [ ] USt-Hinweis im Impressum prüfen (Kleinunternehmerregelung ja/nein)
 - [ ] Startpasswort ändern
-- [ ] Echte Kurszeiten des AlphaClub eintragen

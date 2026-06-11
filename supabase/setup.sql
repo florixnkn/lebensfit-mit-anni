@@ -88,7 +88,7 @@ create or replace function public._check_admin(p_password text)
 returns void
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_hash text;
@@ -119,7 +119,7 @@ create or replace function public.admin_verify(p_password text)
 returns boolean
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 begin
   perform public._check_admin(p_password);
@@ -131,7 +131,7 @@ create or replace function public.admin_change_password(p_old text, p_new text)
 returns boolean
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 begin
   perform public._check_admin(p_old);
@@ -150,7 +150,7 @@ create or replace function public.admin_save_course(
   p_password text, p_id uuid, p_title text, p_weekday smallint,
   p_start_time time, p_duration int, p_studio_id uuid, p_note text, p_active boolean
 ) returns uuid
-language plpgsql security definer set search_path = public
+language plpgsql security definer set search_path = public, extensions
 as $$
 declare v_id uuid;
 begin
@@ -172,7 +172,7 @@ $$;
 
 create or replace function public.admin_delete_course(p_password text, p_id uuid)
 returns boolean
-language plpgsql security definer set search_path = public
+language plpgsql security definer set search_path = public, extensions
 as $$
 begin
   perform public._check_admin(p_password);
@@ -185,7 +185,7 @@ $$;
 create or replace function public.admin_save_review(
   p_password text, p_id uuid, p_author text, p_rating smallint, p_text text, p_published boolean
 ) returns uuid
-language plpgsql security definer set search_path = public
+language plpgsql security definer set search_path = public, extensions
 as $$
 declare v_id uuid;
 begin
@@ -207,7 +207,7 @@ $$;
 -- Alle Bewertungen (auch versteckte) – nur mit Passwort
 create or replace function public.admin_list_reviews(p_password text)
 returns setof public.reviews
-language plpgsql security definer set search_path = public
+language plpgsql security definer set search_path = public, extensions
 as $$
 begin
   perform public._check_admin(p_password);
@@ -217,7 +217,7 @@ $$;
 
 create or replace function public.admin_delete_review(p_password text, p_id uuid)
 returns boolean
-language plpgsql security definer set search_path = public
+language plpgsql security definer set search_path = public, extensions
 as $$
 begin
   perform public._check_admin(p_password);
@@ -230,7 +230,7 @@ $$;
 create or replace function public.admin_save_studio(
   p_password text, p_id uuid, p_name text, p_address text, p_website text
 ) returns uuid
-language plpgsql security definer set search_path = public
+language plpgsql security definer set search_path = public, extensions
 as $$
 declare v_id uuid;
 begin
@@ -250,7 +250,7 @@ $$;
 
 create or replace function public.admin_delete_studio(p_password text, p_id uuid)
 returns boolean
-language plpgsql security definer set search_path = public
+language plpgsql security definer set search_path = public, extensions
 as $$
 begin
   perform public._check_admin(p_password);
@@ -282,13 +282,13 @@ insert into public.studios (name, address, website)
 select 'AlphaClub Neufahrn', 'Auweg 100, 85375 Neufahrn b. Freising', 'https://alphaclub-nf.de'
 where not exists (select 1 from public.studios where name = 'AlphaClub Neufahrn');
 
--- Beispiel-Kurszeiten (über /admin anpassbar!)
+-- Kurszeiten AlphaClub (über /admin anpassbar)
 insert into public.courses (title, weekday, start_time, duration_minutes, studio_id)
 select v.title, v.weekday, v.start_time::time, 60, s.id
 from (values
-  ('Indoor Cycling', 2::smallint, '18:30'),
-  ('Indoor Cycling', 4::smallint, '19:00'),
-  ('Indoor Cycling', 7::smallint, '10:00')
+  ('Indoor Cycling', 3::smallint, '18:00'),
+  ('Indoor Cycling', 4::smallint, '19:45'),
+  ('Indoor Cycling', 7::smallint, '16:00')
 ) as v(title, weekday, start_time)
 cross join (select id from public.studios where name = 'AlphaClub Neufahrn' limit 1) s
 where not exists (select 1 from public.courses);
