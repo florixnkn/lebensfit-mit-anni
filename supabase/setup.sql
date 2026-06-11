@@ -83,9 +83,13 @@ revoke insert, update, delete on public.reviews from anon, authenticated;
 
 -- ---------- Admin-Funktionen ----------
 
--- Interne Passwortprüfung mit Brute-Force-Sperre
+-- Interne Passwortprüfung mit Brute-Force-Sperre.
+-- Gibt false zurück statt eine Exception zu werfen: Eine Exception würde
+-- die ganze Transaktion – inklusive des protokollierten Fehlversuchs –
+-- zurückrollen und die Sperre damit wirkungslos machen.
+drop function if exists public._check_admin(text);
 create or replace function public._check_admin(p_password text)
-returns void
+returns boolean
 language plpgsql
 security definer
 set search_path = public, extensions
@@ -106,15 +110,16 @@ begin
 
   if v_hash is null or crypt(coalesce(p_password, ''), v_hash) <> v_hash then
     insert into public.admin_login_attempts (success) values (false);
-    raise exception 'Falsches Passwort.';
+    return false;
   end if;
 
   insert into public.admin_login_attempts (success) values (true);
   delete from public.admin_login_attempts where attempted_at < now() - interval '1 day';
+  return true;
 end;
 $$;
 
--- Login-Check für die Admin-Oberfläche
+-- Login-Check für die Admin-Oberfläche (false = falsches Passwort)
 create or replace function public.admin_verify(p_password text)
 returns boolean
 language plpgsql
@@ -122,8 +127,7 @@ security definer
 set search_path = public, extensions
 as $$
 begin
-  perform public._check_admin(p_password);
-  return true;
+  return public._check_admin(p_password);
 end;
 $$;
 
@@ -134,7 +138,7 @@ security definer
 set search_path = public, extensions
 as $$
 begin
-  perform public._check_admin(p_old);
+  if not public._check_admin(p_old) then return null; end if;
   if length(coalesce(p_new, '')) < 8 then
     raise exception 'Neues Passwort muss mindestens 8 Zeichen haben.';
   end if;
@@ -154,7 +158,7 @@ language plpgsql security definer set search_path = public, extensions
 as $$
 declare v_id uuid;
 begin
-  perform public._check_admin(p_password);
+  if not public._check_admin(p_password) then return null; end if;
   if p_id is null then
     insert into public.courses (title, weekday, start_time, duration_minutes, studio_id, note, active)
     values (p_title, p_weekday, p_start_time, p_duration, p_studio_id, p_note, p_active)
@@ -175,7 +179,7 @@ returns boolean
 language plpgsql security definer set search_path = public, extensions
 as $$
 begin
-  perform public._check_admin(p_password);
+  if not public._check_admin(p_password) then return null; end if;
   delete from public.courses where id = p_id;
   return true;
 end;
@@ -189,7 +193,7 @@ language plpgsql security definer set search_path = public, extensions
 as $$
 declare v_id uuid;
 begin
-  perform public._check_admin(p_password);
+  if not public._check_admin(p_password) then return null; end if;
   if p_id is null then
     insert into public.reviews (author, rating, text, published)
     values (p_author, p_rating, p_text, p_published)
@@ -204,14 +208,18 @@ begin
 end;
 $$;
 
--- Alle Bewertungen (auch versteckte) – nur mit Passwort
+-- Alle Bewertungen (auch versteckte) – nur mit Passwort (null = falsches Passwort)
+drop function if exists public.admin_list_reviews(text);
 create or replace function public.admin_list_reviews(p_password text)
-returns setof public.reviews
+returns jsonb
 language plpgsql security definer set search_path = public, extensions
 as $$
 begin
-  perform public._check_admin(p_password);
-  return query select * from public.reviews order by created_at desc;
+  if not public._check_admin(p_password) then return null; end if;
+  return (
+    select coalesce(jsonb_agg(to_jsonb(r) order by r.created_at desc), '[]'::jsonb)
+    from public.reviews r
+  );
 end;
 $$;
 
@@ -220,7 +228,7 @@ returns boolean
 language plpgsql security definer set search_path = public, extensions
 as $$
 begin
-  perform public._check_admin(p_password);
+  if not public._check_admin(p_password) then return null; end if;
   delete from public.reviews where id = p_id;
   return true;
 end;
@@ -234,7 +242,7 @@ language plpgsql security definer set search_path = public, extensions
 as $$
 declare v_id uuid;
 begin
-  perform public._check_admin(p_password);
+  if not public._check_admin(p_password) then return null; end if;
   if p_id is null then
     insert into public.studios (name, address, website)
     values (p_name, p_address, p_website)
@@ -253,7 +261,7 @@ returns boolean
 language plpgsql security definer set search_path = public, extensions
 as $$
 begin
-  perform public._check_admin(p_password);
+  if not public._check_admin(p_password) then return null; end if;
   delete from public.studios where id = p_id;
   return true;
 end;

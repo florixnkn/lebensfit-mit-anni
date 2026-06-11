@@ -30,6 +30,16 @@ function sbRpc(fn, args) {
   return sbRequest(`rpc/${fn}`, { method: "POST", body: JSON.stringify(args) });
 }
 
+// Admin-Funktionen melden ein falsches Passwort als null/false statt
+// als Exception (sonst würde der Fehlversuch-Log zurückgerollt).
+async function sbAdminRpc(fn, args) {
+  const result = await sbRpc(fn, args);
+  if (result === null || result === false) {
+    throw new Error("Falsches Passwort.");
+  }
+  return result;
+}
+
 const WEEKDAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
 
 function formatTime(t) {

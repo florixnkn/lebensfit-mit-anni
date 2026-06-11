@@ -21,6 +21,9 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* hidden-Attribut muss auch Elemente mit eigenem display-Wert ausblenden */
+[hidden] { display: none !important; }
+
 html { scroll-behavior: smooth; }
 
 body {

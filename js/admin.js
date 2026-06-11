@@ -26,11 +26,11 @@ function showMsg(el, text, ok) {
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const btn = document.getElementById("loginBtn");
-  const pw = document.getElementById("loginPassword").value;
+  const pw = document.getElementById("loginPassword").value.trim();
   btn.disabled = true;
   btn.textContent = "Prüfe …";
   try {
-    await sbRpc("admin_verify", { p_password: pw });
+    await sbAdminRpc("admin_verify", { p_password: pw });
     sessionStorage.setItem(SESSION_KEY, pw);
     enterDashboard();
   } catch (err) {
@@ -55,7 +55,7 @@ async function enterDashboard() {
 
 // Auto-Login, wenn Passwort noch in der Session liegt
 if (getPw()) {
-  sbRpc("admin_verify", { p_password: getPw() })
+  sbAdminRpc("admin_verify", { p_password: getPw() })
     .then(enterDashboard)
     .catch(() => sessionStorage.removeItem(SESSION_KEY));
 }
@@ -106,7 +106,7 @@ async function loadCoursesAdmin() {
       b.addEventListener("click", async () => {
         if (!confirm("Diesen Termin wirklich löschen?")) return;
         try {
-          await sbRpc("admin_delete_course", { p_password: getPw(), p_id: b.dataset.delCourse });
+          await sbAdminRpc("admin_delete_course", { p_password: getPw(), p_id: b.dataset.delCourse });
           showMsg(dashMsg, "Termin gelöscht.", true);
           loadCoursesAdmin();
         } catch (err) {
@@ -144,7 +144,7 @@ document.getElementById("courseReset").addEventListener("click", resetCourseForm
 document.getElementById("courseForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   try {
-    await sbRpc("admin_save_course", {
+    await sbAdminRpc("admin_save_course", {
       p_password: getPw(),
       p_id: document.getElementById("courseId").value || null,
       p_title: document.getElementById("courseTitle").value.trim(),
@@ -169,7 +169,7 @@ async function loadReviewsAdmin() {
   const list = document.getElementById("reviewList");
   list.innerHTML = '<span class="spin"></span>';
   try {
-    const reviews = await sbRpc("admin_list_reviews", { p_password: getPw() });
+    const reviews = await sbAdminRpc("admin_list_reviews", { p_password: getPw() });
     list.innerHTML = reviews.length
       ? reviews
           .map(
@@ -195,7 +195,7 @@ async function loadReviewsAdmin() {
       b.addEventListener("click", async () => {
         if (!confirm("Diese Bewertung wirklich löschen?")) return;
         try {
-          await sbRpc("admin_delete_review", { p_password: getPw(), p_id: b.dataset.delReview });
+          await sbAdminRpc("admin_delete_review", { p_password: getPw(), p_id: b.dataset.delReview });
           showMsg(dashMsg, "Bewertung gelöscht.", true);
           loadReviewsAdmin();
         } catch (err) {
@@ -227,7 +227,7 @@ document.getElementById("reviewReset").addEventListener("click", resetReviewForm
 document.getElementById("reviewForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   try {
-    await sbRpc("admin_save_review", {
+    await sbAdminRpc("admin_save_review", {
       p_password: getPw(),
       p_id: document.getElementById("reviewId").value || null,
       p_author: document.getElementById("reviewAuthor").value.trim(),
@@ -279,7 +279,7 @@ async function loadStudiosAdmin() {
       b.addEventListener("click", async () => {
         if (!confirm("Dieses Studio wirklich löschen? Termine behalten dann kein Studio.")) return;
         try {
-          await sbRpc("admin_delete_studio", { p_password: getPw(), p_id: b.dataset.delStudio });
+          await sbAdminRpc("admin_delete_studio", { p_password: getPw(), p_id: b.dataset.delStudio });
           showMsg(dashMsg, "Studio gelöscht.", true);
           loadStudiosAdmin();
           loadCoursesAdmin();
@@ -311,7 +311,7 @@ document.getElementById("studioReset").addEventListener("click", resetStudioForm
 document.getElementById("studioForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   try {
-    await sbRpc("admin_save_studio", {
+    await sbAdminRpc("admin_save_studio", {
       p_password: getPw(),
       p_id: document.getElementById("studioId").value || null,
       p_name: document.getElementById("studioName").value.trim(),
@@ -330,14 +330,14 @@ document.getElementById("studioForm").addEventListener("submit", async (e) => {
 
 document.getElementById("passwordForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const pwNew = document.getElementById("pwNew").value;
-  if (pwNew !== document.getElementById("pwNew2").value) {
+  const pwNew = document.getElementById("pwNew").value.trim();
+  if (pwNew !== document.getElementById("pwNew2").value.trim()) {
     showMsg(dashMsg, "Die neuen Passwörter stimmen nicht überein.", false);
     return;
   }
   try {
-    await sbRpc("admin_change_password", {
-      p_old: document.getElementById("pwOld").value,
+    await sbAdminRpc("admin_change_password", {
+      p_old: document.getElementById("pwOld").value.trim(),
       p_new: pwNew,
     });
     sessionStorage.setItem(SESSION_KEY, pwNew);
