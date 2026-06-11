@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin – Lebensfit mit Anni</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="../assets/img/logo.png" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="admin-body">
+
+  <!-- Login -->
+  <div class="admin-login" id="loginView">
+    <form class="admin-login-card" id="loginForm">
+      <img src="../assets/img/logo.png" alt="Logo" />
+      <h1>Admin-Bereich</h1>
+      <div class="admin-msg" id="loginMsg"></div>
+      <label class="field" style="text-align:left">
+        Passwort
+        <input type="password" id="loginPassword" autocomplete="current-password" required />
+      </label>
+      <div class="admin-actions" style="justify-content:center">
+        <button class="btn btn-primary" type="submit" id="loginBtn">Anmelden</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashView" hidden>
+    <div class="admin-header">
+      <div class="container">
+        <strong>Lebensfit mit Anni · Admin</strong>
+        <span>
+          <a class="btn btn-ghost btn-small" href="../index.html" style="border-color:var(--cream);color:var(--cream)">Zur Website</a>
+          <button class="btn btn-ghost btn-small" id="logoutBtn" style="border-color:var(--cream);color:var(--cream)">Abmelden</button>
+        </span>
+      </div>
+    </div>
+
+    <main class="admin-main container">
+      <div class="admin-msg" id="dashMsg"></div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="courses">📅 Termine</button>
+        <button class="admin-tab" data-tab="reviews">⭐ Bewertungen</button>
+        <button class="admin-tab" data-tab="studios">🏋️ Studios</button>
+        <button class="admin-tab" data-tab="password">🔑 Passwort</button>
+      </div>
+
+      <!-- Termine -->
+      <section class="admin-panel active" id="panel-courses">
+        <div class="admin-card">
+          <h2 id="courseFormTitle">Neuer Termin</h2>
+          <form id="courseForm">
+            <input type="hidden" id="courseId" />
+            <div class="form-grid">
+              <label class="field">Kurs-Titel
+                <input id="courseTitle" value="Indoor Cycling" required />
+              </label>
+              <label class="field">Wochentag
+                <select id="courseWeekday" required></select>
+              </label>
+              <label class="field">Uhrzeit
+                <input type="time" id="courseTime" required />
+              </label>
+              <label class="field">Dauer (Minuten)
+                <input type="number" id="courseDuration" value="60" min="10" max="240" required />
+              </label>
+              <label class="field">Studio
+                <select id="courseStudio"></select>
+              </label>
+              <label class="field">Notiz (optional)
+                <input id="courseNote" placeholder="z. B. Anmeldung erforderlich" />
+              </label>
+              <label class="field">Status
+                <select id="courseActive">
+                  <option value="true">Aktiv (sichtbar)</option>
+                  <option value="false">Pausiert (versteckt)</option>
+                </select>
+              </label>
+            </div>
+            <div class="admin-actions">
+              <button class="btn btn-primary btn-small" type="submit">Speichern</button>
+              <button class="btn btn-ghost btn-small" type="button" id="courseReset">Formular leeren</button>
+            </div>
+          </form>
+        </div>
+        <div class="admin-card">
+          <h2>Bestehende Termine</h2>
+          <div class="admin-list" id="courseList"></div>
+        </div>
+      </section>
+
+      <!-- Bewertungen -->
+      <section class="admin-panel" id="panel-reviews">
+        <div class="admin-card">
+          <h2 id="reviewFormTitle">Neue Bewertung</h2>
+          <form id="reviewForm">
+            <input type="hidden" id="reviewId" />
+            <div class="form-grid">
+              <label class="field">Name
+                <input id="reviewAuthor" required />
+              </label>
+              <label class="field">Sterne (1–5)
+                <select id="reviewRating">
+                  <option value="5">★★★★★</option>
+                  <option value="4">★★★★☆</option>
+                  <option value="3">★★★☆☆</option>
+                  <option value="2">★★☆☆☆</option>
+                  <option value="1">★☆☆☆☆</option>
+                </select>
+              </label>
+              <label class="field">Sichtbarkeit
+                <select id="reviewPublished">
+                  <option value="true">Veröffentlicht</option>
+                  <option value="false">Versteckt</option>
+                </select>
+              </label>
+              <label class="field full">Bewertungstext
+                <textarea id="reviewText" required></textarea>
+              </label>
+            </div>
+            <div class="admin-actions">
+              <button class="btn btn-primary btn-small" type="submit">Speichern</button>
+              <button class="btn btn-ghost btn-small" type="button" id="reviewReset">Formular leeren</button>
+            </div>
+          </form>
+        </div>
+        <div class="admin-card">
+          <h2>Bestehende Bewertungen</h2>
+          <div class="admin-list" id="reviewList"></div>
+        </div>
+      </section>
+
+      <!-- Studios -->
+      <section class="admin-panel" id="panel-studios">
+        <div class="admin-card">
+          <h2 id="studioFormTitle">Neues Studio</h2>
+          <form id="studioForm">
+            <input type="hidden" id="studioId" />
+            <div class="form-grid">
+              <label class="field">Name
+                <input id="studioName" required />
+              </label>
+              <label class="field">Adresse
+                <input id="studioAddress" />
+              </label>
+              <label class="field">Website (https://…)
+                <input type="url" id="studioWebsite" placeholder="https://" />
+              </label>
+            </div>
+            <div class="admin-actions">
+              <button class="btn btn-primary btn-small" type="submit">Speichern</button>
+              <button class="btn btn-ghost btn-small" type="button" id="studioReset">Formular leeren</button>
+            </div>
+          </form>
+        </div>
+        <div class="admin-card">
+          <h2>Bestehende Studios</h2>
+          <div class="admin-list" id="studioList"></div>
+        </div>
+      </section>
+
+      <!-- Passwort -->
+      <section class="admin-panel" id="panel-password">
+        <div class="admin-card">
+          <h2>Admin-Passwort ändern</h2>
+          <form id="passwordForm">
+            <div class="form-grid">
+              <label class="field">Aktuelles Passwort
+                <input type="password" id="pwOld" autocomplete="current-password" required />
+              </label>
+              <label class="field">Neues Passwort (min. 8 Zeichen)
+                <input type="password" id="pwNew" minlength="8" autocomplete="new-password" required />
+              </label>
+              <label class="field">Neues Passwort wiederholen
+                <input type="password" id="pwNew2" minlength="8" autocomplete="new-password" required />
+              </label>
+            </div>
+            <div class="admin-actions">
+              <button class="btn btn-primary btn-small" type="submit">Passwort ändern</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

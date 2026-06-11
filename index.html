@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lebensfit mit Anni – Indoor Cycling in Neufahrn</title>
+  <meta name="description" content="Indoor-Cycling-Kurse mit Antje Kindler in Neufahrn bei Freising. Aktuelle Kurszeiten, Studios und Bewertungen." />
+  <link rel="icon" type="image/png" href="assets/img/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-brand" href="#start">
+        <img src="assets/img/logo.png" alt="Lebensfit mit Anni Logo" />
+        <span>Lebensfit mit Anni</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#ueber">Über mich</a></li>
+        <li><a href="#kursplan">Kursplan</a></li>
+        <li><a href="#studios">Studios</a></li>
+        <li><a href="#bewertungen">Bewertungen</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero" id="start">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="hero-content container">
+      <img class="hero-logo" src="assets/img/logo.png" alt="Lebensfit mit Anni" />
+      <h1>Lebensfit mit Anni</h1>
+      <p class="hero-sub">Indoor Cycling, Energie und gute Laune – gemeinsam fit werden in Neufahrn bei Freising.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#kursplan">Kursplan ansehen</a>
+        <a class="btn btn-ghost" href="https://www.instagram.com/lebensfit_mit_anni/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      </div>
+    </div>
+    <a class="scroll-hint" href="#ueber" aria-label="Nach unten scrollen">↓</a>
+  </header>
+
+  <main>
+    <section id="ueber">
+      <div class="container about-grid">
+        <div class="reveal">
+          <img class="about-img" src="assets/img/cycling-raum.jpg" alt="Cycling-Raum im AlphaClub Neufahrn" />
+        </div>
+        <div class="about-text reveal reveal-delay-1">
+          <span class="section-tag">Über mich</span>
+          <h2 class="section-title">Hallo, ich bin Anni!</h2>
+          <p>Als selbstständige Cycling-Trainerin bringe ich dich auf dem Rad an deine Grenzen – und ein Stück darüber hinaus. Bei mir zählt nicht, wie fit du startest, sondern dass du dranbleibst.</p>
+          <p>Meine Kurse verbinden mitreißende Musik, abwechslungsreiche Intervalle und eine Gemeinschaft, die motiviert. Egal ob Einsteiger:in oder Profi: Auf dem Bike findet jede:r das eigene Tempo.</p>
+          <div class="about-facts">
+            <div class="fact"><strong>🚴</strong><span>Indoor Cycling</span></div>
+            <div class="fact"><strong>💚</strong><span>Motivation &amp; Spaß</span></div>
+            <div class="fact"><strong>🎵</strong><span>Power-Playlists</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="schedule-section" id="kursplan">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-tag">Kursplan</span>
+          <h2 class="section-title">Wann wir gemeinsam fahren</h2>
+          <p class="section-intro">Alle aktuellen Kurszeiten auf einen Blick. Die Anmeldung läuft direkt über das jeweilige Studio.</p>
+        </div>
+        <div class="calendar reveal reveal-delay-1" id="calendar">
+          <p>Kursplan wird geladen&nbsp;<span class="spin"></span></p>
+        </div>
+        <p class="schedule-hint reveal">Anmeldung &amp; Buchung direkt beim Studio – die Links findest du unten.</p>
+      </div>
+    </section>
+
+    <section id="studios">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-tag">Studios</span>
+          <h2 class="section-title">Hier findest du meine Kurse</h2>
+        </div>
+        <div class="studio-grid reveal reveal-delay-1" id="studioGrid"></div>
+      </div>
+    </section>
+
+    <section class="reviews-section" id="bewertungen">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-tag">Bewertungen</span>
+          <h2 class="section-title">Das sagen meine Teilnehmer:innen</h2>
+        </div>
+        <div class="review-grid reveal reveal-delay-1" id="reviewGrid"></div>
+      </div>
+    </section>
+
+    <section id="kontakt">
+      <div class="container">
+        <div class="contact-card reveal">
+          <div>
+            <span class="section-tag">Kontakt</span>
+            <h2 class="section-title">Lust mitzufahren?</h2>
+            <p>Schreib mir auf Instagram oder komm einfach zu einem Kurs vorbei – ich freue mich auf dich!</p>
+            <p style="margin-top:18px">
+              <a class="btn btn-primary insta-btn" href="https://www.instagram.com/lebensfit_mit_anni/" target="_blank" rel="noopener noreferrer">📷 @lebensfit_mit_anni</a>
+            </p>
+          </div>
+          <ul>
+            <li><span class="ico">👤</span> Antje Kindler – Cycling-Trainerin</li>
+            <li><span class="ico">📍</span> Auweg 45, 85375 Neufahrn b. Freising</li>
+            <li><span class="ico">🏋️</span> Kurse aktuell im AlphaClub Neufahrn</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> Lebensfit mit Anni – Antje Kindler</span>
+      <span>
+        <a href="impressum.html">Impressum</a>
+        <a href="datenschutz.html">Datenschutz</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
